@@ -1,12 +1,72 @@
 body, html {
   font-family: "Roboto", sans-serif;
-  background: linear-gradient(to bottom, #87a7fd 0%,#f1cc53 40%,#e01405 100%);
   height: 100%;
 }
-.logo {
-  background-image: url('img/download.jpeg');
-  width: 100px;
-  height: 100px;
-  background-repeat: no-repeat;
-  background-size: contain;
+.create-note{
+  margin-top: 15px;
+  border: 2px solid #0303036e;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: -5px 5px 5px #aaaaaa91;
+}
+
+.note-field{
+  border: none;
+  display: block;
+  width: 100%;
+}
+textarea{
+  padding: .375rem .75rem;
+}
+.note-field:focus, button:focus{
+  outline: none;
+  box-shadow:none;
+  border:0px solid #ccc;
+}
+.create-group{
+  display: flex;
+  flex-direction: column-reverse;
+}
+#note-title{
+  display: none;
+  margin-bottom: 20px;
+}
+#note-content{
+  margin-bottom: 10px;
+}
+.create-note:focus-within #note-title{
+  display: block;
+}
+
+.notes-container{
+  margin-top: 20px;
+  height: 100%;
+}
+.note-box{
+  border: 2px solid #0f0e0e77;
+  border-radius: 10px;
+  margin: 15px;
+  padding: 10px;
+  display: inline-block;
+}
+.note-box:hover, .note-box:focus-within{
+  box-shadow: 5px 5px 5px #aaaaaa91;
+}
+
+.far, .fas{
+  cursor: pointer;
+}
+.actions{
+  margin-top: 10px;
+  display: flex;
+}
+.move{
+  margin-left: auto;
+}
+button{
+  background: none;
+  border: 0px;
+}
+#createNoteBtn{
+  margin-left: 0.75rem;
 }
