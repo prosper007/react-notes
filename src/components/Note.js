@@ -11,7 +11,6 @@ class Note extends Component {
       isEditing: false,
     };
     this.toggleEdit = this.toggleEdit.bind(this);
-    this.suppressEnter = this.toggleEdit.bind(this);
   }
 
   toggleEdit = () => {
@@ -53,21 +52,29 @@ class Note extends Component {
         <button type="button" onClick={this.toggleEdit}><i className="fas fa-check" /> </button>
       );
 
+    const zIndexStyle = {
+      zIndex: this.props.note.zIndex,
+    };
+
     return (
       <Draggable
         handle=".move"
-        defaultPosition={{ x: 20, y: 20 }}
-        position={null}
-        onStart={this.onStartDrag}
-        onDrag={this.onDrag}
+        position={{ x: this.props.note.x, y: this.props.note.y }}
+        grid={[25, 25]}
+        onStart={this.onStart}
+        onDrag={position => this.props.updatePosition(this.props.id, position)}
         onStop={this.onStopDrag}
         bounds="body"
+        // Adapted from https://github.com/mzabriskie/react-draggable/issues/129
+        axis="none"
       >
-        <div className="note-box">
+        <div className="note-box" id={this.props.id} style={zIndexStyle}>
           {noteContent}
           <div className="actions">
             {updateButton}
-            <button type="button" onClick={this.props.deleteNote}><i className="far fa-trash-alt" /></button>
+            <button type="button" onClick={this.props.deleteNote}>
+              <i className="far fa-trash-alt" />
+            </button>
             <button className="move" type="button"><i className="fas fa-arrows-alt" /></button>
           </div>
         </div>
