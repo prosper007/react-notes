@@ -62,11 +62,9 @@ class Note extends Component {
         position={{ x: this.props.note.x, y: this.props.note.y }}
         grid={[25, 25]}
         onStart={this.onStart}
-        onDrag={position => this.props.updatePosition(this.props.id, position)}
+        onDrag={(event, position) => this.props.updatePosition(this.props.id, position)}
         onStop={this.onStopDrag}
         bounds="body"
-        // Adapted from https://github.com/mzabriskie/react-draggable/issues/129
-        axis="none"
       >
         <div className="note-box" id={this.props.id} style={zIndexStyle}>
           {noteContent}
