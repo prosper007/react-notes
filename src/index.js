@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Map } from 'immutable';
+import io from 'socket.io-client';
 import Container from 'react-bootstrap/Container';
 import './style.scss';
 import CreateNote from './components/CreateNote';
 import NotesContainer from './components/NotesContainer';
-import * as db from './services/datastore';
+// import * as db from './services/datastore';
+
+const socketserver = 'http://localhost:9090';
 
 class App extends Component {
   emptyNote = {
@@ -30,15 +33,20 @@ class App extends Component {
     this.handleTextUpdate = this.handleTextUpdate.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
     this.updatePosition = this.updatePosition.bind(this);
+    this.socket = io(socketserver);
+    this.socket.on('connect', () => { console.log('socket.io connected'); });
+    this.socket.on('disconnect', () => { console.log('socket.io disconnected'); });
+    this.socket.on('reconnect', () => { console.log('socket.io reconnected'); });
+    this.socket.on('error', (error) => { console.log(error); });
   }
 
   componentDidMount() {
-    db.fetchNotes((notes) => {
+    this.socket.on('notes', (notes) => {
       this.setState({ notes: Map(notes) });
     });
-    db.getMaxZ((maxZ) => {
-      this.setState({ maxZ });
-    });
+    // db.getMaxZ((maxZ) => {
+    //   this.setState({ maxZ });
+    // });
   }
 
   handleNewTitleChange(event) {
@@ -52,32 +60,32 @@ class App extends Component {
   }
 
   createNewNote() {
-    db.addNote(this.state.newNote);
+    this.socket.emit('createNote', this.state.newNote);
     this.setState({ newNote: this.emptyNote });
   }
 
   handleTitleUpdate(id, event) {
     event.persist();
     const updatedTitle = event.target.value;
-    db.updateField(id, 'title', updatedTitle);
+    this.socket.emit('updateNote', id, { title: updatedTitle });
   }
 
   handleTextUpdate(id, event) {
     event.persist();
     const updatedText = event.target.value;
-    db.updateField(id, 'text', updatedText);
+    this.socket.emit('updateNote', id, { text: updatedText });
   }
 
   deleteNote(id) {
-    db.deleteNote(id);
+    this.socket.emit('deleteNote', id);
   }
 
   updatePosition(id, position) {
     const { x, y } = position;
-    db.updateField(id, 'x', x);
-    db.updateField(id, 'y', y);
-    db.updateMaxZ(this.state.maxZ + 1);
-    db.updateField(id, 'zIndex', this.state.maxZ);
+    this.socket.emit('updateNote', id, { x });
+    this.socket.emit('updateNote', id, { y });
+    // db.updateMaxZ(this.state.maxZ + 1);
+    this.socket.emit('updateNote', id, { zIndex: this.state.maxZ });
   }
 
   render() {
