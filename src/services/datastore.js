@@ -1,7 +1,8 @@
 import firebase from 'firebase';
+import API_KEY from '../../config';
 
 const config = {
-  apiKey: 'AIzaSyBibiwRdNYJ9QVRD60wTV4EJfhrgzboOfM',
+  apiKey: API_KEY.FIREBASE,
   authDomain: 'react-notes-5d070.firebaseapp.com',
   databaseURL: 'https://react-notes-5d070.firebaseio.com',
   projectId: 'react-notes-5d070',
